@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../drizzle/index'
-import { users } from '../drizzle/schema/users'
+import { NewUser, users } from '../drizzle/schema/users'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
@@ -23,5 +23,31 @@ export const loginUser = async (
         { expiresIn: "2d" }
     );
 
-    return {token, user: user[0]};
+    return { token, user: user[0] };
+}
+
+export const registerUser = async (userData: NewUser) => {
+    const existingUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, userData.email))
+        .limit(1);
+
+    if (existingUser.length > 0) throw { status: 409, message: "User with this email already exists" };
+
+    const salt = await bcrypt.genSalt(12);
+    const hashedPass = await bcrypt.hash(userData.password, salt);
+
+    const [newUser] = await db.insert(users).values({
+        ...userData,
+        password: hashedPass,
+    }).returning({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        role:users.role,
+        createdAt: users.createdAt,
+    });
+
+    return newUser;
 }
