@@ -1,13 +1,8 @@
-import * as express from 'express';
-import { User } from '../drizzle/schema/users';
+import { Request } from "express";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user: {
-        id: number;
-        role: "admin" | "doctor" | "receptionist" | "technician";
-      };
-    }
-  }
+export interface AuthRequest extends Request {
+  user: {
+    id: number;
+    role: "admin" | "doctor" | "receptionist" | "technician";
+  };
 }

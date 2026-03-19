@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 import { errorResponse } from "../utils/response";
@@ -9,7 +9,7 @@ interface TokenPlayload {
 }
 
 export const authGuard = async (
-    req: Request,
+    req: any,
     res: Response,
     next: NextFunction
 ) => {
