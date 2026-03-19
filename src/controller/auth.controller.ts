@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { loginUser, registerUser } from "../services/auth.service";
 import { successResponse } from '../utils/response'
+import { LoginInput, SignupInput } from "../validations/auth.schema";
 
 export const login = async (
-    req: Request,
+    req: Request<{}, {}, LoginInput>,
     res: Response,
     next: NextFunction
 ) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) throw { status: 400, message: "Email and Password required" };
 
         const data = await loginUser(email, password);
 
@@ -22,14 +21,12 @@ export const login = async (
 }
 
 export const signup = async (
-    req: Request,
+    req: Request<{}, {}, SignupInput>,
     res: Response,
     next: NextFunction
 ) => {
     try {
         const { name, email, password } = req.body;
-
-        if (!email || !password || !name) throw { status: 400, message: "All fields are required" };
 
         const user = await registerUser({
             name,

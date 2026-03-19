@@ -23,7 +23,9 @@ export const loginUser = async (
         { expiresIn: "2d" }
     );
 
-    return { token, user: user[0] };
+    const { password: _, ...userWithoutPass } = user[0];
+
+    return { token, user: userWithoutPass };
 }
 
 export const registerUser = async (userData: NewUser) => {
@@ -45,7 +47,7 @@ export const registerUser = async (userData: NewUser) => {
         id: users.id,
         name: users.name,
         email: users.email,
-        role:users.role,
+        role: users.role,
         createdAt: users.createdAt,
     });
 
