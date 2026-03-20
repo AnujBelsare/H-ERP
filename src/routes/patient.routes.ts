@@ -5,7 +5,6 @@ import { authorize } from "../middleware/role.middleware";
 
 const router = Router();
 
-// Create (Receptionist only)
 router.post("/", authGuard, authorize("receptionist", "admin"), patientController.createPatient);
 
 router.get("/", authGuard, authorize("receptionist", "doctor", "admin"), patientController.getPatients);
@@ -16,11 +15,6 @@ router.patch("/:id", authGuard, authorize("receptionist", "doctor", "admin"), pa
 
 router.delete("/:id", authGuard, authorize("admin"), patientController.deletePatient);
 
-router.post(
-    "/verify-face", 
-    authGuard, 
-    authorize("receptionist", "admin"), 
-    patientController.verifyFace
-);
+router.post("/verify-face", authGuard, authorize("receptionist", "admin"), patientController.verifyFace);
 
 export default router;
