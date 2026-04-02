@@ -11,7 +11,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const raiseBreakdown = async (
-    req: Request,
+    req: any,
     res: Response,
     next: NextFunction
 ) => {

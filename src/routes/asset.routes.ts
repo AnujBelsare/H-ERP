@@ -3,13 +3,19 @@ import * as assetCtrl from "../controller/asset.controller";
 import { authGuard } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/role.middleware";
 import { validate } from "../middleware/validate";
-import { createAssetSchema } from "../validations/asset.schema";
+import { createAssetSchema, updateAssetSchema } from "../validations/asset.schema";
 
 const router = Router();
 
-router.get("/qr/:code", authGuard, assetCtrl.scanQR);
+router.use(authGuard);
 
-router.get("/", authGuard, authorize("admin", "technician"), assetCtrl.listAssets);
-router.post("/", authGuard, authorize("admin"), validate(createAssetSchema), assetCtrl.createAsset);
+// Mobile & Admin Shared
+router.get("/qr/:code", assetCtrl.scanQR);
+router.get("/", authorize("admin", "technician"), assetCtrl.listAssets);
+
+// Admin Only
+router.post("/", authorize("admin"), validate(createAssetSchema), assetCtrl.createAsset);
+router.put("/:id", authorize("admin"), validate(updateAssetSchema), assetCtrl.updateAsset);
+router.delete("/:id", authorize("admin"), assetCtrl.deleteAsset);
 
 export default router;
