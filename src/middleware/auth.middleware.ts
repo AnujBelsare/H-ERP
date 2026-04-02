@@ -16,7 +16,7 @@ export const authGuard = async (
     try {
         const authHeader = req.headers.authorization;
 
-        if (!authHeader || !authHeader.startsWith("Bearer")) throw { status: 401, message: "Access denied. No token provided." };
+        if (!authHeader || !authHeader.startsWith("Bearer ")) throw { status: 401, message: "Access denied. No token provided." };
 
         const token = authHeader.split(" ")[1];
 

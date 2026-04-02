@@ -1,11 +1,16 @@
 import { db } from "../drizzle/index";
-import { breakdowns, tasks } from "../drizzle/schema/maintenance";
+import { tasks } from "../drizzle/schema/maintenance";
+import { breakdowns } from "../drizzle/schema/breakdowns";
+import { assets } from "../drizzle/schema/assets";
 import { eq } from "drizzle-orm";
 
 // Mobile: Raise Breakdown
 export const createBreakdown = async (data: { assetId: number; reportedBy: number; issueDescription: string }) => {
-    const [result] = await db.insert(breakdowns).values(data).returning();
-    return result;
+    return await db.transaction(async (tx) => {
+        const [result] = await tx.insert(breakdowns).values(data).returning();
+        await tx.update(assets).set({ status: 'breakdown' }).where(eq(assets.id, data.assetId));
+        return result;
+    });
 };
 
 // Admin: Assign Technician (Creates a Task)

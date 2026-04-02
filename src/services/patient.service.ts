@@ -9,7 +9,7 @@ export const registerPatient = async (patientData: NewPatient) => {
         .where(eq(patients.phone, patientData.phone))
         .limit(1);
 
-    if (existingPatinet) throw { status: 409, message: `Patient with phone number ${patientData.phone} is already registered.` };
+    if (existingPatinet.length > 0) throw { status: 409, message: `Patient with phone number ${patientData.phone} is already registered.` };
 
     const [newPatient] = await db
         .insert(patients)

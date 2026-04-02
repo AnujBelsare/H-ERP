@@ -26,13 +26,13 @@ export const signup = async (
     next: NextFunction
 ) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         const user = await registerUser({
             name,
             email,
             password,
-            role: 'technician'
+            role: role ?? 'technician'
         });
 
         return successResponse(res, user, "User registered successfully", 201);

@@ -2,9 +2,10 @@
   "name": "herp",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --exec tsx src/server.ts",
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",

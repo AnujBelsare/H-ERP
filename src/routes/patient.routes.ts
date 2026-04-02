@@ -9,12 +9,12 @@ router.post("/", authGuard, authorize("receptionist", "admin"), patientControlle
 
 router.get("/", authGuard, authorize("receptionist", "doctor", "admin"), patientController.getPatients);
 
+router.post("/verify-face", authGuard, authorize("receptionist", "admin"), patientController.verifyFace);
+
 router.get("/:id", authGuard, authorize("receptionist", "doctor", "admin"), patientController.getPatientById);
 
 router.patch("/:id", authGuard, authorize("receptionist", "doctor", "admin"), patientController.updatePatient);
 
 router.delete("/:id", authGuard, authorize("admin"), patientController.deletePatient);
-
-router.post("/verify-face", authGuard, authorize("receptionist", "admin"), patientController.verifyFace);
 
 export default router;
