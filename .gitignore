@@ -7,3 +7,5 @@ env
 \node_modules\
 .env
 env/
+
+.HERP.postman_collection.json
