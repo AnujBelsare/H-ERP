@@ -4,6 +4,8 @@ import assetRoutes from "./routes/asset.routes";
 import patientRoutes from "./routes/patient.routes";
 import breakdownRoutes from "./routes/breakdown.routes";
 import checklistRoutes from "./routes/checklist.routes";
+import ppmRoutes from "./routes/ppm.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 import maintenanceRoutes from "./routes/maintenance.routes";
 import { errorMiddleware } from "./middleware/error.middleware";
 import { env } from "./config/env";
@@ -19,6 +21,8 @@ app.use("/api/patients", patientRoutes);
 app.use("/api/breakdown", breakdownRoutes);
 app.use("/api/checklist", checklistRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
+app.use("/api/ppm", ppmRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Health check
 app.get("/", (_, res) => {
