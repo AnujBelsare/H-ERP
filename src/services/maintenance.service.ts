@@ -1,53 +1,90 @@
 import { db } from "../drizzle/index";
-import { tasks } from "../drizzle/schema/maintenance";
-import { breakdowns } from "../drizzle/schema/breakdowns";
+import { tasks, breakdowns } from "../drizzle/schema/maintenance";
 import { assets } from "../drizzle/schema/assets";
 import { eq } from "drizzle-orm";
+import { createNotification } from "./notification.service";
 
-// Mobile: Raise Breakdown
+// 1. Mobile: Raise Breakdown (Updates Asset status automatically)
 export const createBreakdown = async (data: { assetId: number; reportedBy: number; issueDescription: string }) => {
     return await db.transaction(async (tx) => {
-        const [result] = await tx.insert(breakdowns).values(data).returning();
-        await tx.update(assets).set({ status: 'breakdown' }).where(eq(assets.id, data.assetId));
+        const [result] = await tx.insert(breakdowns).values({
+            ...data,
+            status: "open"
+        }).returning();
+
+        // Industry Standard: Sync asset status with breakdown report
+        await tx.update(assets)
+            .set({ status: 'breakdown' })
+            .where(eq(assets.id, data.assetId));
+
         return result;
     });
 };
 
-// Admin: Assign Technician (Creates a Task)
+// 2. Admin: Assign Technician (Combined logic with Notifications & Transactions)
 export const assignTechnician = async (breakdownId: number, technicianId: number) => {
-    // 1. Update breakdown status to 'assigned'
-    await db.update(breakdowns)
-        .set({ status: "assigned" })
-        .where(eq(breakdowns.id, breakdownId));
+    return await db.transaction(async (tx) => {
+        // Update breakdown status to 'assigned'
+        await tx.update(breakdowns)
+            .set({ status: "assigned" })
+            .where(eq(breakdowns.id, breakdownId));
 
-    // 2. Create the task for the technician
-    const [task] = await db.insert(tasks).values({
-        breakdownId,
-        assignedTo: technicianId,
-        status: "pending"
-    }).returning();
+        // Create the task for the technician
+        const [task] = await tx.insert(tasks).values({
+            breakdownId,
+            assignedTo: technicianId,
+            status: "pending"
+        }).returning();
 
-    return task;
+        // Industry Standard: Trigger notification within the assignment flow
+        await createNotification(
+            technicianId,
+            "New Task Assigned",
+            `You have been assigned to Breakdown Ticket #${breakdownId}`
+        );
+
+        return task;
+    });
 };
 
-// Mobile: Get Technician's Tasks
+// 3. Mobile: Get Technician's Tasks
 export const getTasksByTechnician = async (userId: number) => {
     return await db.select()
         .from(tasks)
         .where(eq(tasks.assignedTo, userId));
 };
 
-// Mobile: Complete Task
+// 4. Mobile: Complete Task (Closes both Task and Breakdown, resets Asset)
 export const finishTask = async (taskId: number, remarks: string) => {
-    const [updatedTask] = await db.update(tasks)
-        .set({ 
-            status: "completed", 
-            remarks, 
-            completedAt: new Date() 
-        })
-        .where(eq(tasks.id, taskId))
-        .returning();
+    return await db.transaction(async (tx) => {
+        // Update task to completed
+        const [updatedTask] = await tx.update(tasks)
+            .set({
+                status: "completed",
+                remarks,
+                completedAt: new Date()
+            })
+            .where(eq(tasks.id, taskId))
+            .returning();
 
-    // Optionally update the breakdown to 'closed' here if needed
-    return updatedTask;
+        if (!updatedTask) throw new Error("Task not found");
+
+        // Fetch breakdown to get assetId
+        const [breakdown] = await tx.select()
+            .from(breakdowns)
+            .where(eq(breakdowns.id, updatedTask.breakdownId))
+            .limit(1);
+
+        // Update breakdown to 'closed'
+        await tx.update(breakdowns)
+            .set({ status: "closed" })
+            .where(eq(breakdowns.id, updatedTask.breakdownId));
+
+        // Industry Standard: Reset asset status to 'functional' after repair
+        await tx.update(assets)
+            .set({ status: 'functional' })
+            .where(eq(assets.id, breakdown.assetId));
+
+        return updatedTask;
+    });
 };

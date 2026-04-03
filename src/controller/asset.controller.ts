@@ -38,3 +38,11 @@ export const scanQR = async (req: Request, res: Response, next: NextFunction) =>
     return successResponse(res, asset, "Asset details retrieved");
   } catch (err) { next(err); }
 };
+
+export const generateQR = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { assetId } = req.body;
+        const qrImage = await assetService.generateAssetQR(assetId);
+        return successResponse(res, { qrImage }, "QR Code generated successfully");
+    } catch (err) { next(err); }
+};

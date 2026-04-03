@@ -17,5 +17,6 @@ router.get("/", authorize("admin", "technician"), assetCtrl.listAssets);
 router.post("/", authorize("admin"), validate(createAssetSchema), assetCtrl.createAsset);
 router.put("/:id", authorize("admin"), validate(updateAssetSchema), assetCtrl.updateAsset);
 router.delete("/:id", authorize("admin"), assetCtrl.deleteAsset);
+router.post("/qr", authorize("admin"), assetCtrl.generateQR);
 
 export default router;

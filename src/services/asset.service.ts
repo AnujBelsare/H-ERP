@@ -1,6 +1,8 @@
 import { assets, NewAsset } from "../drizzle/schema/assets";
 import { db } from "../drizzle/index";
 import { eq } from "drizzle-orm";
+import QRCode from "qrcode";
+
 
 export const addAsset = async (data: NewAsset) => {
   const [newAsset] = await db.insert(assets).values(data).returning();
@@ -43,4 +45,11 @@ export const deleteAsset = async (id: string) => {
 
   if (!deleted) throw { status: 404, message: "Asset not found" };
   return deleted;
+};
+
+export const generateAssetQR = async (assetId: string) => {
+    // Usually, we encode a URL or a specific ID string
+    const qrData = `ASSET-ID-${assetId}`;
+    const base64Image = await QRCode.toDataURL(qrData);
+    return base64Image; // Returns a Data URI that can be saved or displayed
 };

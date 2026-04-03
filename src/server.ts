@@ -9,11 +9,13 @@ import dashboardRoutes from "./routes/dashboard.routes";
 import maintenanceRoutes from "./routes/maintenance.routes";
 import { errorMiddleware } from "./middleware/error.middleware";
 import { env } from "./config/env";
+import path from "path";
 
 const app = express();
 
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/assets", assetRoutes);
