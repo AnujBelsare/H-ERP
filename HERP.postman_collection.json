@@ -1,20 +1,20 @@
 {
   "info": {
-    "name": "HERP API",
-    "_postman_id": "herp-api-collection",
-    "description": "Hospital Equipment & Resource Platform — full API collection",
+    "name": "HERP API — Full Collection",
+    "_postman_id": "herp-api-collection-v3",
+    "description": "Hospital Equipment & Resource Platform — all endpoints from xlsx spec",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
-    { "key": "adminToken", "value": "", "type": "string" },
-    { "key": "techToken", "value": "", "type": "string" },
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "adminToken",     "value": "", "type": "string" },
+    { "key": "techToken",      "value": "", "type": "string" },
     { "key": "receptionToken", "value": "", "type": "string" },
-    { "key": "doctorToken", "value": "", "type": "string" }
+    { "key": "doctorToken",    "value": "", "type": "string" }
   ],
   "item": [
     {
-      "name": "Auth",
+      "name": "1. Auth",
       "item": [
         {
           "name": "Signup — Admin",
@@ -22,10 +22,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api","auth","signup"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@herp.com\",\n  \"password\": \"Admin@1234\",\n  \"role\": \"admin\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@herp.com\",\n  \"password\": \"Admin@1234\",\n  \"role\": \"admin\"\n}" }
           }
         },
         {
@@ -34,10 +31,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api","auth","signup"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Tech User\",\n  \"email\": \"tech@herp.com\",\n  \"password\": \"Tech@1234\",\n  \"role\": \"technician\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tech User\",\n  \"email\": \"tech@herp.com\",\n  \"password\": \"Tech@1234\",\n  \"role\": \"technician\"\n}" }
           }
         },
         {
@@ -46,10 +40,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api","auth","signup"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Reception User\",\n  \"email\": \"reception@herp.com\",\n  \"password\": \"Recep@1234\",\n  \"role\": \"receptionist\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Reception User\",\n  \"email\": \"reception@herp.com\",\n  \"password\": \"Recep@1234\",\n  \"role\": \"receptionist\"\n}" }
           }
         },
         {
@@ -58,150 +49,73 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api","auth","signup"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Doctor User\",\n  \"email\": \"doctor@herp.com\",\n  \"password\": \"Doctor@1234\",\n  \"role\": \"doctor\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Doctor User\",\n  \"email\": \"doctor@herp.com\",\n  \"password\": \"Doctor@1234\",\n  \"role\": \"doctor\"\n}" }
           }
         },
         {
-          "name": "Login — Admin",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.data && json.data.token) {",
-                  "  pm.collectionVariables.set('adminToken', json.data.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Login — Admin (saves token)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript",
+            "exec": ["const j=pm.response.json(); if(j.data&&j.data.token) pm.collectionVariables.set('adminToken', j.data.token);"]
+          }}],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@herp.com\",\n  \"password\": \"Admin@1234\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@herp.com\",\n  \"password\": \"Admin@1234\"\n}" }
           }
         },
         {
-          "name": "Login — Technician",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.data && json.data.token) {",
-                  "  pm.collectionVariables.set('techToken', json.data.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Login — Technician (saves token)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript",
+            "exec": ["const j=pm.response.json(); if(j.data&&j.data.token) pm.collectionVariables.set('techToken', j.data.token);"]
+          }}],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"tech@herp.com\",\n  \"password\": \"Tech@1234\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"tech@herp.com\",\n  \"password\": \"Tech@1234\"\n}" }
           }
         },
         {
-          "name": "Login — Receptionist",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.data && json.data.token) {",
-                  "  pm.collectionVariables.set('receptionToken', json.data.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Login — Receptionist (saves token)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript",
+            "exec": ["const j=pm.response.json(); if(j.data&&j.data.token) pm.collectionVariables.set('receptionToken', j.data.token);"]
+          }}],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"reception@herp.com\",\n  \"password\": \"Recep@1234\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"reception@herp.com\",\n  \"password\": \"Recep@1234\"\n}" }
           }
         },
         {
-          "name": "Login — Doctor",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.data && json.data.token) {",
-                  "  pm.collectionVariables.set('doctorToken', json.data.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Login — Doctor (saves token)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript",
+            "exec": ["const j=pm.response.json(); if(j.data&&j.data.token) pm.collectionVariables.set('doctorToken', j.data.token);"]
+          }}],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"doctor@herp.com\",\n  \"password\": \"Doctor@1234\"\n}"
-            }
-          }
-        },
-        {
-          "name": "Signup — Validation Error (missing name)",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api","auth","signup"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"bad@herp.com\",\n  \"password\": \"pass\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"doctor@herp.com\",\n  \"password\": \"Doctor@1234\"\n}" }
           }
         }
       ]
     },
     {
-      "name": "Assets",
+      "name": "2. Assets",
       "item": [
         {
-          "name": "Create Asset (admin)",
+          "name": "Add Asset",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/assets", "host": ["{{baseUrl}}"], "path": ["api","assets"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"MRI Machine\",\n  \"category\": \"Imaging\",\n  \"serialNumber\": \"SN-MRI-001\",\n  \"qrCode\": \"QR-MRI-001\",\n  \"location\": \"Radiology Wing\",\n  \"status\": \"functional\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"MRI Machine\",\n  \"category\": \"Imaging\",\n  \"serialNumber\": \"SN-MRI-001\",\n  \"qrCode\": \"QR-MRI-001\",\n  \"location\": \"Radiology Wing\",\n  \"status\": \"functional\"\n}" }
           }
         },
         {
-          "name": "List Assets (admin/technician)",
+          "name": "Get Assets",
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
@@ -217,69 +131,282 @@
           }
         },
         {
-          "name": "Update Asset (admin)",
+          "name": "Generate QR — POST /api/qr",
           "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/assets/1", "host": ["{{baseUrl}}"], "path": ["api","assets","1"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"location\": \"ICU Wing\",\n  \"status\": \"maintenance\"\n}"
-            }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/qr", "host": ["{{baseUrl}}"], "path": ["api","qr"] },
+            "body": { "mode": "raw", "raw": "{\n  \"assetId\": 1\n}" }
           }
         },
         {
-          "name": "Delete Asset (admin)",
+          "name": "Update Asset",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/assets/1", "host": ["{{baseUrl}}"], "path": ["api","assets","1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"location\": \"ICU Wing\",\n  \"status\": \"maintenance\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Asset",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/assets/1", "host": ["{{baseUrl}}"], "path": ["api","assets","1"] }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "3. Breakdown",
+      "item": [
         {
-          "name": "Create Asset — Validation Error (missing fields)",
+          "name": "Raise Breakdown — POST /api/breakdown",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/assets", "host": ["{{baseUrl}}"], "path": ["api","assets"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"X\"\n}"
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/breakdown", "host": ["{{baseUrl}}"], "path": ["api","breakdown"] },
+            "body": { "mode": "raw", "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Machine is making loud noise and not starting\",\n  \"photo\": null\n}" }
+          }
+        },
+        {
+          "name": "Get Breakdown (all) — GET /api/breakdown",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/breakdown", "host": ["{{baseUrl}}"], "path": ["api","breakdown"] }
+          }
+        },
+        {
+          "name": "Get Breakdown (filter by status)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/breakdown?status=open",
+              "host": ["{{baseUrl}}"], "path": ["api","breakdown"],
+              "query": [{ "key": "status", "value": "open" }]
             }
           }
         },
         {
-          "name": "List Assets — Unauthorized (no token)",
+          "name": "Approve Breakdown — POST /api/breakdown/approve",
           "request": {
-            "method": "GET",
-            "header": [],
-            "url": { "raw": "{{baseUrl}}/api/assets", "host": ["{{baseUrl}}"], "path": ["api","assets"] }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/breakdown/approve", "host": ["{{baseUrl}}"], "path": ["api","breakdown","approve"] },
+            "body": { "mode": "raw", "raw": "{\n  \"ticketId\": 1\n}" }
           }
         }
       ]
     },
     {
-      "name": "Patients",
+      "name": "4. Assign Technician",
       "item": [
         {
-          "name": "Register Patient (receptionist/admin)",
+          "name": "Assign Technician — POST /api/assign",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{receptionToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api","patients"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"dob\": \"1990-05-15\",\n  \"age\": 34,\n  \"gender\": \"Male\",\n  \"phone\": \"0501234567\",\n  \"email\": \"john@example.com\",\n  \"address\": \"123 Main St\",\n  \"bloodGroup\": \"O+\",\n  \"allergies\": \"Penicillin\"\n}"
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/assign", "host": ["{{baseUrl}}"], "path": ["api","assign"] },
+            "body": { "mode": "raw", "raw": "{\n  \"breakdownId\": 1,\n  \"technicianId\": 2\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Tasks (Mobile)",
+      "item": [
+        {
+          "name": "Get My Tasks — GET /api/tasks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api","tasks"] }
+          }
+        },
+        {
+          "name": "Complete Task — POST /api/tasks/complete",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/tasks/complete", "host": ["{{baseUrl}}"], "path": ["api","tasks","complete"] },
+            "body": { "mode": "raw", "raw": "{\n  \"task_id\": 1,\n  \"remarks\": \"Replaced fan motor. Machine is now operational.\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Checklist",
+      "item": [
+        {
+          "name": "Submit Checklist — POST /api/checklist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/checklist", "host": ["{{baseUrl}}"], "path": ["api","checklist"] },
+            "body": { "mode": "raw", "raw": "{\n  \"assetId\": 1,\n  \"checklistData\": {\n    \"powerOn\": true,\n    \"cablesIntact\": true,\n    \"noiseLevel\": \"normal\",\n    \"lastCleaned\": \"2026-04-01\"\n  }\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Material",
+      "item": [
+        {
+          "name": "Material Add — POST /api/material",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/material", "host": ["{{baseUrl}}"], "path": ["api","material"] },
+            "body": { "mode": "raw", "raw": "{\n  \"taskId\": 1,\n  \"material\": \"Fan Motor 12V\",\n  \"qty\": 2\n}" }
+          }
+        },
+        {
+          "name": "Get Materials for Task",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/material/task/1", "host": ["{{baseUrl}}"], "path": ["api","material","task","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Notifications",
+      "item": [
+        {
+          "name": "Get Notifications — GET /api/notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications", "host": ["{{baseUrl}}"], "path": ["api","notifications"] }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications/1/read", "host": ["{{baseUrl}}"], "path": ["api","notifications","1","read"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Dashboard & Reports",
+      "item": [
+        {
+          "name": "Get Dashboard — GET /api/dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/dashboard", "host": ["{{baseUrl}}"], "path": ["api","dashboard"] }
+          }
+        },
+        {
+          "name": "Reports — GET /api/reports?type=breakdown",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports?type=breakdown",
+              "host": ["{{baseUrl}}"], "path": ["api","reports"],
+              "query": [{ "key": "type", "value": "breakdown" }]
             }
+          }
+        },
+        {
+          "name": "Reports — GET /api/reports?type=tasks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports?type=tasks",
+              "host": ["{{baseUrl}}"], "path": ["api","reports"],
+              "query": [{ "key": "type", "value": "tasks" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Customers",
+      "item": [
+        {
+          "name": "Get Customers — GET /api/customers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/customers", "host": ["{{baseUrl}}"], "path": ["api","customers"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Sites & Asset Mapping",
+      "item": [
+        {
+          "name": "Add Site — POST /api/sites",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/sites", "host": ["{{baseUrl}}"], "path": ["api","sites"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Operation Theater 1\",\n  \"locationCode\": \"OT-01\"\n}" }
+          }
+        },
+        {
+          "name": "Get Sites",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/sites", "host": ["{{baseUrl}}"], "path": ["api","sites"] }
+          }
+        },
+        {
+          "name": "Map Asset — POST /api/asset-mapping",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/asset-mapping", "host": ["{{baseUrl}}"], "path": ["api","asset-mapping"] },
+            "body": { "mode": "raw", "raw": "{\n  \"assetId\": 1,\n  \"siteId\": 1\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. PPM Schedule",
+      "item": [
+        {
+          "name": "PPM Schedule — POST /api/ppm",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/ppm", "host": ["{{baseUrl}}"], "path": ["api","ppm"] },
+            "body": { "mode": "raw", "raw": "{\n  \"assetId\": 1,\n  \"frequency\": \"Monthly\",\n  \"nextServiceDate\": \"2026-05-01\"\n}" }
+          }
+        },
+        {
+          "name": "Get PPM for Asset",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/ppm/asset/1", "host": ["{{baseUrl}}"], "path": ["api","ppm","asset","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Patients",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{receptionToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api","patients"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"John Doe\",\n  \"dob\": \"1990-05-15\",\n  \"age\": 34,\n  \"gender\": \"Male\",\n  \"phone\": \"0501234567\",\n  \"email\": \"john@example.com\",\n  \"address\": \"123 Main St\",\n  \"bloodGroup\": \"O+\"\n}" }
           }
         },
         {
@@ -288,19 +415,6 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{receptionToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api","patients"] }
-          }
-        },
-        {
-          "name": "Get All Patients — with search",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{receptionToken}}" }],
-            "url": {
-              "raw": "{{baseUrl}}/api/patients?search=John",
-              "host": ["{{baseUrl}}"],
-              "path": ["api","patients"],
-              "query": [{ "key": "search", "value": "John" }]
-            }
           }
         },
         {
@@ -315,186 +429,47 @@
           "name": "Update Patient",
           "request": {
             "method": "PATCH",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{receptionToken}}" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{receptionToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/patients/1", "host": ["{{baseUrl}}"], "path": ["api","patients","1"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"address\": \"456 New Street\",\n  \"allergies\": \"None\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"address\": \"456 New Street\"\n}" }
           }
         },
         {
           "name": "Verify Face",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{receptionToken}}" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{receptionToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/patients/verify-face", "host": ["{{baseUrl}}"], "path": ["api","patients","verify-face"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"descriptor\": [0.12, -0.34, 0.56, 0.78, -0.90, 0.11, 0.22, 0.33]\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"descriptor\": [0.12, -0.34, 0.56, 0.78]\n}" }
           }
         },
         {
-          "name": "Delete Patient (admin)",
+          "name": "Delete Patient",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/patients/1", "host": ["{{baseUrl}}"], "path": ["api","patients","1"] }
           }
-        },
-        {
-          "name": "Register Patient — Duplicate Phone (409)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{receptionToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api","patients"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"dob\": \"1992-01-01\",\n  \"age\": 32,\n  \"gender\": \"Female\",\n  \"phone\": \"0501234567\",\n  \"email\": \"jane@example.com\",\n  \"address\": \"789 Side St\"\n}"
-            }
-          }
         }
       ]
     },
     {
-      "name": "Breakdown",
+      "name": "14. Maintenance (internal)",
       "item": [
         {
-          "name": "Raise Breakdown",
+          "name": "Report Issue via Maintenance",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/breakdown", "host": ["{{baseUrl}}"], "path": ["api","breakdown"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Machine is making loud noise and not starting\",\n  \"photo\": \"https://example.com/photo.jpg\"\n}"
-            }
-          }
-        },
-        {
-          "name": "Raise Breakdown — Validation Error (short issue)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/breakdown", "host": ["{{baseUrl}}"], "path": ["api","breakdown"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Bad\"\n}"
-            }
-          }
-        },
-        {
-          "name": "Raise Breakdown — Unauthorized",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{baseUrl}}/api/breakdown", "host": ["{{baseUrl}}"], "path": ["api","breakdown"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Machine is broken completely\"\n}"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Checklist",
-      "item": [
-        {
-          "name": "Submit Checklist (technician)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/checklist", "host": ["{{baseUrl}}"], "path": ["api","checklist"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"checklistData\": {\n    \"powerOn\": true,\n    \"cablesIntact\": true,\n    \"screenFunctional\": true,\n    \"noiseLevel\": \"normal\",\n    \"lastCleaned\": \"2025-04-01\"\n  }\n}"
-            }
-          }
-        },
-        {
-          "name": "Submit Checklist — Empty Data (400)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/checklist", "host": ["{{baseUrl}}"], "path": ["api","checklist"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"checklistData\": {}\n}"
-            }
-          }
-        },
-        {
-          "name": "Submit Checklist — Unauthorized",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{baseUrl}}/api/checklist", "host": ["{{baseUrl}}"], "path": ["api","checklist"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"checklistData\": { \"check\": true }\n}"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Maintenance",
-      "item": [
-        {
-          "name": "Report Issue / Breakdown (mobile)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
+            "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/maintenance/breakdown", "host": ["{{baseUrl}}"], "path": ["api","maintenance","breakdown"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Ventilator fan is not spinning properly\",\n  \"priority\": \"high\"\n}"
-            }
+            "body": { "mode": "formdata", "formdata": [
+              { "key": "assetId", "value": "1", "type": "text" },
+              { "key": "issueDescription", "value": "Ventilator fan not spinning properly", "type": "text" }
+            ]}
           }
         },
         {
-          "name": "Assign Technician to Breakdown (admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/maintenance/assign", "host": ["{{baseUrl}}"], "path": ["api","maintenance","assign"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"ticketId\": 1,\n  \"technicianId\": 2\n}"
-            }
-          }
-        },
-        {
-          "name": "Get My Tasks (technician)",
+          "name": "Get My Tasks (maintenance route)",
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{techToken}}" }],
@@ -502,45 +477,12 @@
           }
         },
         {
-          "name": "Complete Task (technician)",
+          "name": "Complete Task by URL param",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{techToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/maintenance/tasks/1/complete", "host": ["{{baseUrl}}"], "path": ["api","maintenance","tasks","1","complete"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"remarks\": \"Replaced the fan motor. Machine is now fully operational.\"\n}"
-            }
-          }
-        },
-        {
-          "name": "Assign Technician — Forbidden (technician role)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{techToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/maintenance/assign", "host": ["{{baseUrl}}"], "path": ["api","maintenance","assign"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"ticketId\": 1,\n  \"technicianId\": 2\n}"
-            }
-          }
-        },
-        {
-          "name": "Report Issue — Unauthorized (no token)",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{baseUrl}}/api/maintenance/breakdown", "host": ["{{baseUrl}}"], "path": ["api","maintenance","breakdown"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assetId\": 1,\n  \"issue\": \"Something is broken here\",\n  \"priority\": \"low\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Replaced fan motor. Machine operational.\"\n}" }
           }
         }
       ]

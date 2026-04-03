@@ -62,3 +62,14 @@ export const completeTask = async (req: Request, res: Response, next: NextFuncti
         next(err); 
     }
 };
+
+// POST /api/tasks/complete — takes task_id from body (xlsx spec)
+export const completeTaskById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { task_id, remarks } = req.body;
+        const result = await maintenanceService.finishTask(Number(task_id), remarks ?? "");
+        return successResponse(res, result, "Task marked as completed");
+    } catch (err) {
+        next(err);
+    }
+};
